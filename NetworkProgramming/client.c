@@ -1,7 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <string.h>
+#include <unistd.h>
 #include <sys/socket.h>
+
+#define SERV_PORT 12345
 
 ssize_t readn(int fd, void* vptr, size_t size) {
     size_t nleft;
@@ -25,6 +29,8 @@ ssize_t readn(int fd, void* vptr, size_t size) {
         ptr += nread;
     }
     return (n - nleft);
+
+    
 }
 
 int main() {
@@ -42,6 +48,7 @@ int main() {
     connect(sockfd, (struct sockaddr*) &servaddr, sizeof(servaddr));
     send_data(stdin, sockfd);
     exit(0);
+    
 }
 
 #define MESSAGE_SIZE 1024000
@@ -54,7 +61,7 @@ void send_data(FILE* fp, int sockfd) {
     }
     query[MESSAGE_SIZE] = '\0';
 
-    // 调用send函数法数据
+    // 调用send函数来发送数据
     const char* cp = query; //指示当前发送到了哪里
     remaining = strlen(query);
     while (remaining) {
@@ -67,4 +74,5 @@ void send_data(FILE* fp, int sockfd) {
         remaining -= n_written;
         cp += n_written;
     }
+    
 }
