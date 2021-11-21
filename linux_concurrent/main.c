@@ -2,27 +2,25 @@
 #include <pthread.h>
 #include <stdlib.h>
 
-#define N 2
+#define N 4
+
 void* thread(void* vargp);
 
-char** ptr; 
-
 int main() {
+    pthread_t tid[N];
     int i;
-    pthread_t tid;
-    char* msgs[N] = {
-        "Hello from foo",
-        "Hello from bar"
-    };
 
-    ptr = msgs;
-    for (i = 0; i < N; i++) pthread_create(&tid, NULL, thread, (void *)i);
-    pthread_exit(NULL);
+    for (i = 0; i < N; i++) {
+        pthread_create(&tid[i], NULL, thread, &i);
+    }
+    for (i = 0; i < N; i++) {
+        pthread_join(tid[i], NULL);
+    }
+    exit(0);
 }
 
 void* thread(void *vargp) {
-    int myid = (int)vargp;
-    static int cnt = 0;
-    printf("[%d]: %s (cnt = %d)\n", myid, ptr[myid], ++cnt);
+    int myid = *((int *)vargp);
+    printf("Hello from thread %d\n", myid);
     return NULL;
 }
