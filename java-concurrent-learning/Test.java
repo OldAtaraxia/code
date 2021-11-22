@@ -21,5 +21,4 @@ public class Test {
         th2.join();
         return count;
     }
-
 }
